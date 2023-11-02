@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:crud_firebase/service/product/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:crud_firebase/core.dart';

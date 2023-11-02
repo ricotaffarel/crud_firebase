@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:crud_firebase/service/auth/auth_service.dart';
 import 'package:crud_firebase/state_util.dart';
 import 'package:flutter/material.dart';
