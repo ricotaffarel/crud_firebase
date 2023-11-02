@@ -34,10 +34,8 @@ class ProductService {
   Future<bool> updateProduct(String id, String productName, int price,
       File? image, String? imageName) async {
     try {
-      final DocumentSnapshot productSnapshot = await FirebaseFirestore.instance
-          .collection("products")
-          .doc(id)
-          .get();
+      final DocumentSnapshot productSnapshot =
+          await FirebaseFirestore.instance.collection("products").doc(id).get();
 
       if (productSnapshot.exists) {
         // Mengambil URL gambar lama dari dokumen Firestore
@@ -45,10 +43,7 @@ class ProductService {
             productSnapshot.data() as Map<String, dynamic>;
 
         // Memperbarui data dalam Firestore
-        await FirebaseFirestore.instance
-            .collection("products")
-            .doc(id)
-            .update({
+        await FirebaseFirestore.instance.collection("products").doc(id).update({
           "product_name": productName,
           "price": price,
         });
@@ -94,10 +89,32 @@ class ProductService {
 
   Future<bool> deleteProduct(String id) async {
     try {
-      await FirebaseFirestore.instance
-          .collection("products")
-          .doc(id)
-          .delete();
+      //kode awal
+      // var data = await FirebaseFirestore.instance
+      // .collection("products")
+      // .doc(id);
+
+      //kode update
+      var data =
+          await FirebaseFirestore.instance.collection("products").doc(id);
+      final DocumentSnapshot productSnapshot = await data.get();
+
+      //get old image
+      final Map<String, dynamic> oldImageURL =
+          productSnapshot.data() as Map<String, dynamic>;
+
+      //init storage bucket
+      final FirebaseStorage storage =
+          FirebaseStorage.instanceFor(bucket: 'gs://crud-e5f93.appspot.com');
+
+      //check and delete image
+      if (oldImageURL.isNotEmpty) {
+        final Reference oldImageRef = storage.refFromURL(oldImageURL["photo"]);
+        await oldImageRef.delete();
+      }
+
+      await data.delete();
+
       print("hapus data success");
       return true;
     } catch (e) {
