@@ -1,6 +1,7 @@
 import 'package:crud_firebase/state_util.dart';
 import 'package:flutter/material.dart';
 import 'package:crud_firebase/core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MainNavigationView extends StatefulWidget {
   const MainNavigationView({Key? key}) : super(key: key);
@@ -23,6 +24,13 @@ class MainNavigationView extends StatefulWidget {
                     backgroundColor: Colors.blueGrey,
                     foregroundColor: Colors.white),
                 onPressed: () => Get.to(const ProductView()),
+                child: const Text("Product"),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueGrey,
+                    foregroundColor: Colors.white),
+                onPressed: () => print(dotenv.env['apiKey_web'].toString()),
                 child: const Text("Product"),
               ),
             ],

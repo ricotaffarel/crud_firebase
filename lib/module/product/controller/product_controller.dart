@@ -8,6 +8,7 @@ import '../view/product_view.dart';
 class ProductController extends State<ProductView> {
   static late ProductController instance;
   late ProductView view;
+  final ProductService productService = ProductService();
   bool loading = false;
 
   @override
@@ -22,20 +23,25 @@ class ProductController extends State<ProductView> {
 
   List<Map<String, dynamic>> products = [];
 
-  getProduct() async {
+  Future<void> getProduct() async {
     loading = true;
-    setState(() {});
-    await Future.delayed(const Duration(seconds: 3));
-    var data = await ProductService().getProduct();
-    products = [];
-    products.addAll(data);
-
-    loading = false;
+    try {
+      var data = await productService.getProduct();
+      products = [];
+      if (data.isNotEmpty) {
+        products.addAll(data);
+      }
+    } catch (e) {
+      // Handle error, jika diperlukan
+      print(e.toString());
+    } finally {
+      loading = false;
+    }
     setState(() {});
   }
 
-  deleteProduct(String id) async {
-    var delete = await ProductService().deleteProduct(id);
+  Future deleteProduct(String id) async {
+    var delete = await productService.deleteProduct(id);
     if (delete) {
       await showDialog<void>(
         context: context,

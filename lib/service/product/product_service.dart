@@ -4,14 +4,15 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ProductService {
   Future<bool> addProduct(
       String productName, int price, File image, String imageName) async {
     // ignore: duplicate_ignore
     try {
-      final FirebaseStorage storage =
-          FirebaseStorage.instanceFor(bucket: 'xxx');
+      final FirebaseStorage storage = FirebaseStorage.instanceFor(
+          bucket: dotenv.env['bucket_name'].toString());
 
       final Reference storageReference =
           storage.ref().child('product_images/$imageName');
@@ -50,7 +51,7 @@ class ProductService {
 
         if (image != null && imageName != null && image.path.isNotEmpty) {
           final FirebaseStorage storage = FirebaseStorage.instanceFor(
-              bucket: 'xxx');
+              bucket: dotenv.env['bucket_name'].toString());
 
           final Reference storageReference =
               storage.ref().child('product_images/$imageName');
@@ -104,8 +105,8 @@ class ProductService {
           productSnapshot.data() as Map<String, dynamic>;
 
       //init storage bucket
-      final FirebaseStorage storage =
-          FirebaseStorage.instanceFor(bucket: 'xxx');
+      final FirebaseStorage storage = FirebaseStorage.instanceFor(
+          bucket: dotenv.env['bucket_name'].toString());
 
       //check and delete image
       if (oldImageURL.isNotEmpty) {
@@ -123,22 +124,23 @@ class ProductService {
   }
 
   Future<List<Map<String, dynamic>>> getProduct() async {
-    try {
-      var data = await FirebaseFirestore.instance.collection("products").get();
-      // List<Map<String, dynamic>> newData =
-      //     data.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-      print("ok");
+  try {
+    var data = await FirebaseFirestore.instance.collection("products").get();
+    if (data.docs.isNotEmpty) {
       List<Map<String, dynamic>> newData = data.docs.map((doc) {
         Map<String, dynamic> docData = doc.data();
-        docData['document_id'] =
-            doc.id; // Menambahkan Document ID ke data dokumen
+        docData['document_id'] = doc.id; // Menambahkan Document ID ke data dokumen
         return docData;
       }).toList();
-      print(newData[1].toString());
       print("get data success");
       return newData;
-    } catch (e) {
+    } else {
+      print("get data success");
       return [];
     }
+  } catch (e) {
+    return [];
   }
+}
+
 }
