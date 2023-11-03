@@ -11,7 +11,7 @@ class ProductService {
     // ignore: duplicate_ignore
     try {
       final FirebaseStorage storage =
-          FirebaseStorage.instanceFor(bucket: 'gs://crud-e5f93.appspot.com');
+          FirebaseStorage.instanceFor(bucket: 'xxx');
 
       final Reference storageReference =
           storage.ref().child('product_images/$imageName');
@@ -50,7 +50,7 @@ class ProductService {
 
         if (image != null && imageName != null && image.path.isNotEmpty) {
           final FirebaseStorage storage = FirebaseStorage.instanceFor(
-              bucket: 'gs://crud-e5f93.appspot.com');
+              bucket: 'xxx');
 
           final Reference storageReference =
               storage.ref().child('product_images/$imageName');
@@ -105,7 +105,7 @@ class ProductService {
 
       //init storage bucket
       final FirebaseStorage storage =
-          FirebaseStorage.instanceFor(bucket: 'gs://crud-e5f93.appspot.com');
+          FirebaseStorage.instanceFor(bucket: 'xxx');
 
       //check and delete image
       if (oldImageURL.isNotEmpty) {
